@@ -8,6 +8,7 @@
 
     <!-- Entity Framework Core & Database -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4" />
 

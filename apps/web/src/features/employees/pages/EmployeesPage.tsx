@@ -278,8 +278,10 @@ export const EmployeesPage: React.FC = () => {
                 </p>
               </div>
             ) : !employees || employees.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 text-xs">
-                Không tìm thấy nhân viên nào phù hợp với điều kiện tìm kiếm.
+              <div className="text-center py-12 px-4 text-slate-400 text-xs space-y-1">
+                <Users className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                <p className="font-medium text-slate-600">Chưa có nhân viên nào trong hệ thống</p>
+                <p className="text-[11px] text-slate-400">Hãy điền form bên trái để tạo hồ sơ nhân sự đầu tiên của nhà hàng.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">

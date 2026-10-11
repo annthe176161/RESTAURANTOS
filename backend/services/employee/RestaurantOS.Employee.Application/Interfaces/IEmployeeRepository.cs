@@ -1,6 +1,6 @@
 using RestaurantOS.Employee.Domain;
 
-namespace RestaurantOS.Employee.Application;
+namespace RestaurantOS.Employee.Application.Interfaces;
 
 public interface IEmployeeRepository
 {
@@ -21,25 +21,3 @@ public interface IEmployeeRepository
     Task SaveChangesAsync(CancellationToken ct = default);
 }
 
-public record EmployeeDto(
-    Guid Id, 
-    string FullName, 
-    string Email, 
-    string PhoneNumber, 
-    string Role, 
-    decimal HourlyRate, 
-    bool IsActive, 
-    DateTime CreatedAtUtc);
-
-public record CreateEmployeeRequest(
-    string FullName, 
-    string Email, 
-    string? PhoneNumber, 
-    string? Role, 
-    decimal? HourlyRate);
-
-public record UpdateEmployeeRequest(
-    string FullName, 
-    string? PhoneNumber, 
-    string? Role, 
-    decimal? HourlyRate);

@@ -1,31 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using RestaurantOS.Employee.Application;
+using RestaurantOS.Employee.Application.Interfaces;
 using RestaurantOS.Employee.Domain;
 
-namespace RestaurantOS.Employee.Infrastructure;
-
-public class EmployeeDbContext : DbContext
-{
-    public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options) : base(options) { }
-
-    public DbSet<Domain.Employee> Employees => Set<Domain.Employee>();
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Domain.Employee>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.FullName).IsRequired().HasMaxLength(150);
-            entity.Property(e => e.Email).IsRequired().HasMaxLength(150);
-            entity.Property(e => e.PhoneNumber).HasMaxLength(30);
-            entity.Property(e => e.Role).IsRequired().HasMaxLength(50);
-            entity.Property(e => e.HourlyRate).HasColumnType("TEXT"); // SQLite safe
-            entity.HasIndex(e => e.Email).IsUnique();
-        });
-    }
-}
+namespace RestaurantOS.Employee.Infrastructure.Persistence.Repositories;
 
 public class EmployeeRepository : IEmployeeRepository
 {
@@ -90,3 +67,4 @@ public class EmployeeRepository : IEmployeeRepository
         await _dbContext.SaveChangesAsync(ct);
     }
 }
+
