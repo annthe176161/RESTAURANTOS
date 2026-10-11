@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\RestaurantOS.Finance.Domain\RestaurantOS.Finance.Domain.csproj" />
+  </ItemGroup>
+</Project>

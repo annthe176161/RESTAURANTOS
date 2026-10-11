@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\RestaurantOS.Ocr.Application\RestaurantOS.Ocr.Application.csproj" />
+    <ProjectReference Include="..\RestaurantOS.Ocr.Infrastructure\RestaurantOS.Ocr.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+</Project>

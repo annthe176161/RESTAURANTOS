@@ -1,0 +1,24 @@
+# Stage 1: Build & Publish
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy CPM and Build configurations
+COPY Directory.Build.props .
+COPY Directory.Packages.props .
+
+# Copy Gateway project file and restore
+COPY backend/gateway/RestaurantOS.Gateway/RestaurantOS.Gateway.csproj backend/gateway/RestaurantOS.Gateway/
+RUN dotnet restore backend/gateway/RestaurantOS.Gateway/RestaurantOS.Gateway.csproj
+
+# Copy Gateway source and publish
+COPY backend/gateway/RestaurantOS.Gateway/ backend/gateway/RestaurantOS.Gateway/
+RUN dotnet publish backend/gateway/RestaurantOS.Gateway/RestaurantOS.Gateway.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+EXPOSE 5000
+ENV ASPNETCORE_URLS=http://+:5000
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "RestaurantOS.Gateway.dll"]

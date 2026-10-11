@@ -1,0 +1,15 @@
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/TestResults
+**/node_modules
+**/.dart_tool
+**/*.db
+**/*.md
+.env
+.env.*
+!.env.example
+

@@ -1,0 +1,28 @@
+# Stage 1: Build & Publish
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy CPM and Build configurations
+COPY Directory.Build.props .
+COPY Directory.Packages.props .
+
+# Copy Employee project files and restore
+COPY backend/services/employee/RestaurantOS.Employee.Domain/*.csproj backend/services/employee/RestaurantOS.Employee.Domain/
+COPY backend/services/employee/RestaurantOS.Employee.Application/*.csproj backend/services/employee/RestaurantOS.Employee.Application/
+COPY backend/services/employee/RestaurantOS.Employee.Infrastructure/*.csproj backend/services/employee/RestaurantOS.Employee.Infrastructure/
+COPY backend/services/employee/RestaurantOS.Employee.Api/*.csproj backend/services/employee/RestaurantOS.Employee.Api/
+
+RUN dotnet restore backend/services/employee/RestaurantOS.Employee.Api/RestaurantOS.Employee.Api.csproj
+
+# Copy source code and publish
+COPY backend/services/employee/ backend/services/employee/
+RUN dotnet publish backend/services/employee/RestaurantOS.Employee.Api/RestaurantOS.Employee.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+EXPOSE 5001
+ENV ASPNETCORE_URLS=http://+:5001
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "RestaurantOS.Employee.Api.dll"]

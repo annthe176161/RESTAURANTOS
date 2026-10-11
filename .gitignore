@@ -1,0 +1,46 @@
+## .NET / Visual Studio
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Local.json
+!appsettings.json
+*.db
+*.db-shm
+*.db-wal
+
+## Environment & Secrets
+.env
+.env.*
+!.env.example
+*.local
+
+## OS generated
+.DS_Store
+Thumbs.db
+
+## Node / Frontend
+node_modules/
+dist/
+.npm/
+
+## Flutter / Mobile
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+android/.gradle
+ios/.symlinks
+
+## Test results
+TestResults/
+coverage/
+

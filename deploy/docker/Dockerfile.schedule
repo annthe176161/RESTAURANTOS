@@ -1,0 +1,28 @@
+# Stage 1: Build & Publish
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy CPM and Build configurations
+COPY Directory.Build.props .
+COPY Directory.Packages.props .
+
+# Copy Schedule project files and restore
+COPY backend/services/schedule/RestaurantOS.Schedule.Domain/*.csproj backend/services/schedule/RestaurantOS.Schedule.Domain/
+COPY backend/services/schedule/RestaurantOS.Schedule.Application/*.csproj backend/services/schedule/RestaurantOS.Schedule.Application/
+COPY backend/services/schedule/RestaurantOS.Schedule.Infrastructure/*.csproj backend/services/schedule/RestaurantOS.Schedule.Infrastructure/
+COPY backend/services/schedule/RestaurantOS.Schedule.Api/*.csproj backend/services/schedule/RestaurantOS.Schedule.Api/
+
+RUN dotnet restore backend/services/schedule/RestaurantOS.Schedule.Api/RestaurantOS.Schedule.Api.csproj
+
+# Copy source code and publish
+COPY backend/services/schedule/ backend/services/schedule/
+RUN dotnet publish backend/services/schedule/RestaurantOS.Schedule.Api/RestaurantOS.Schedule.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+EXPOSE 5002
+ENV ASPNETCORE_URLS=http://+:5002
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "RestaurantOS.Schedule.Api.dll"]

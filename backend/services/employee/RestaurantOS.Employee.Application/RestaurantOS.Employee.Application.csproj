@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\RestaurantOS.Employee.Domain\RestaurantOS.Employee.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

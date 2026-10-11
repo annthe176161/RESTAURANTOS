@@ -1,0 +1,32 @@
+name: RestaurantOS CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Verify global.json
+      run: dotnet --info
+
+    - name: Restore dependencies
+      run: dotnet restore backend/RestaurantOS.sln
+
+    - name: Build Solution
+      run: dotnet build backend/RestaurantOS.sln --configuration Release --no-restore
+
+    - name: Run Unit and Integration Tests
+      run: dotnet test backend/RestaurantOS.sln --configuration Release --no-build --verbosity normal

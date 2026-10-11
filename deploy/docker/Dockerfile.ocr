@@ -1,0 +1,28 @@
+# Stage 1: Build & Publish
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy CPM and Build configurations
+COPY Directory.Build.props .
+COPY Directory.Packages.props .
+
+# Copy OCR project files and restore
+COPY backend/services/ocr/RestaurantOS.Ocr.Domain/*.csproj backend/services/ocr/RestaurantOS.Ocr.Domain/
+COPY backend/services/ocr/RestaurantOS.Ocr.Application/*.csproj backend/services/ocr/RestaurantOS.Ocr.Application/
+COPY backend/services/ocr/RestaurantOS.Ocr.Infrastructure/*.csproj backend/services/ocr/RestaurantOS.Ocr.Infrastructure/
+COPY backend/services/ocr/RestaurantOS.Ocr.Api/*.csproj backend/services/ocr/RestaurantOS.Ocr.Api/
+
+RUN dotnet restore backend/services/ocr/RestaurantOS.Ocr.Api/RestaurantOS.Ocr.Api.csproj
+
+# Copy source code and publish
+COPY backend/services/ocr/ backend/services/ocr/
+RUN dotnet publish backend/services/ocr/RestaurantOS.Ocr.Api/RestaurantOS.Ocr.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+EXPOSE 5004
+ENV ASPNETCORE_URLS=http://+:5004
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "RestaurantOS.Ocr.Api.dll"]
