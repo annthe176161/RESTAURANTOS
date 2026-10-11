@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <PropertyGroup>
+    <UserSecretsId>71398cdc-9a13-48c9-a588-145f60aeb7f1</UserSecretsId>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\RestaurantOS.Employee.Application\RestaurantOS.Employee.Application.csproj" />
     <ProjectReference Include="..\RestaurantOS.Employee.Infrastructure\RestaurantOS.Employee.Infrastructure.csproj" />

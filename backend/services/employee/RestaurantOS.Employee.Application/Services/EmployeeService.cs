@@ -1,9 +1,13 @@
 using RestaurantOS.Employee.Application.DTOs;
-using RestaurantOS.Employee.Application.Interfaces;
 using RestaurantOS.Employee.Domain;
+using RestaurantOS.Employee.Domain.Repositories;
 
 namespace RestaurantOS.Employee.Application.Services;
 
+/// <summary>
+/// Triển khai Use Cases quản lý nhân viên (Application Layer).
+/// Điều phối giữa Repository và Domain Model, kiểm tra tính hợp lệ và ánh xạ DTO.
+/// </summary>
 public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository _repository;
@@ -31,32 +35,23 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeDto> CreateAsync(CreateEmployeeRequest request, CancellationToken ct = default)
     {
-        // 1. Kiểm tra tính hợp lệ
-        if (string.IsNullOrWhiteSpace(request.FullName))
-            throw new ArgumentException("Họ và tên nhân viên không được để trống.", nameof(request.FullName));
-
-        if (string.IsNullOrWhiteSpace(request.Email))
-            throw new ArgumentException("Email liên hệ không được để trống.", nameof(request.Email));
-
-        // 2. Kiểm tra trùng lặp email
+        // 1. Kiểm tra nghiệp vụ: Email đã tồn tại chưa
         var existing = await _repository.GetByEmailAsync(request.Email, ct);
         if (existing is not null)
         {
             throw new InvalidOperationException($"Địa chỉ email '{request.Email}' đã được sử dụng bởi một nhân viên khác.");
         }
 
-        // 3. Khởi tạo Entity từ Domain
-        var employee = new Domain.Employee(
-            Guid.NewGuid(),
+        // 2. Khởi tạo Aggregate Root qua Factory Method
+        var employee = Domain.Employee.Create(
             request.FullName,
             request.Email,
             request.Role,
             request.PhoneNumber,
             request.HourlyRate ?? 25000);
 
-        // 4. Lưu qua Repository
+        // 3. Lưu thông qua Repository (gọi Stored Procedure sp_InsertEmployee)
         await _repository.AddAsync(employee, ct);
-        await _repository.SaveChangesAsync(ct);
 
         return MapToDto(employee);
     }
@@ -75,7 +70,8 @@ public class EmployeeService : IEmployeeService
             request.Role,
             request.HourlyRate ?? employee.HourlyRate);
 
-        await _repository.SaveChangesAsync(ct);
+        // Gọi Stored Procedure sp_UpdateEmployee
+        await _repository.UpdateAsync(employee, ct);
         return MapToDto(employee);
     }
 
@@ -87,9 +83,9 @@ public class EmployeeService : IEmployeeService
             return null;
         }
 
-        employee.ToggleStatus();
-        await _repository.SaveChangesAsync(ct);
-        return employee.IsActive;
+        // Gọi Stored Procedure sp_ToggleEmployeeStatus
+        var updatedStatus = await _repository.ToggleStatusAsync(id, ct);
+        return updatedStatus;
     }
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken ct = default)
@@ -100,8 +96,8 @@ public class EmployeeService : IEmployeeService
             return false;
         }
 
+        // Gọi Stored Procedure sp_DeleteEmployee
         await _repository.DeleteAsync(employee, ct);
-        await _repository.SaveChangesAsync(ct);
         return true;
     }
 
@@ -116,4 +112,3 @@ public class EmployeeService : IEmployeeService
             e.IsActive,
             e.CreatedAtUtc);
 }
-

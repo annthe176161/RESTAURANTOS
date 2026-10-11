@@ -37,6 +37,9 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Domain.Employee>
         builder.Property(e => e.CreatedAtUtc)
             .IsRequired();
 
+        builder.Property(e => e.UpdatedAtUtc)
+            .IsRequired(false);
+
         builder.HasIndex(e => e.Email)
             .IsUnique();
     }

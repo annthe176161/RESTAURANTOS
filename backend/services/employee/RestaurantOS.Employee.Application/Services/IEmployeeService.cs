@@ -1,7 +1,11 @@
 using RestaurantOS.Employee.Application.DTOs;
 
-namespace RestaurantOS.Employee.Application.Interfaces;
+namespace RestaurantOS.Employee.Application.Services;
 
+/// <summary>
+/// Hợp đồng xử lý nghiệp vụ (Use Case Contract) cho quản lý nhân sự.
+/// Phục vụ tầng ngoài (API Controller / Minimal API).
+/// </summary>
 public interface IEmployeeService
 {
     Task<IReadOnlyList<EmployeeDto>> GetAllAsync(
