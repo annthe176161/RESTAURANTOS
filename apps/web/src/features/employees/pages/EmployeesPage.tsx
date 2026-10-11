@@ -8,15 +8,20 @@ import {
   Power, 
   Phone, 
   Mail, 
-  Filter
+  Filter,
+  Pencil,
+  X,
+  CheckCircle2
 } from 'lucide-react';
 import { useEmployees } from '../api/getEmployees';
 import { useCreateEmployee } from '../api/createEmployee';
+import { useUpdateEmployee } from '../api/updateEmployee';
 import { useToggleEmployeeStatus } from '../api/toggleEmployeeStatus';
 import { useDeleteEmployee } from '../api/deleteEmployee';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Badge, Spinner } from '../../../components/ui/Badge';
+import type { Employee } from '../types';
 
 export const EmployeesPage: React.FC = () => {
   // Bộ lọc tìm kiếm
@@ -31,10 +36,11 @@ export const EmployeesPage: React.FC = () => {
   });
 
   const createEmployeeMutation = useCreateEmployee();
+  const updateEmployeeMutation = useUpdateEmployee();
   const toggleStatusMutation = useToggleEmployeeStatus();
   const deleteEmployeeMutation = useDeleteEmployee();
 
-  // Form State
+  // Form State Thêm mới
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -42,6 +48,62 @@ export const EmployeesPage: React.FC = () => {
   const [hourlyRate, setHourlyRate] = useState<number>(25000);
   const [formError, setFormError] = useState<string | null>(null);
 
+  // Modal State Sửa
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [editFullName, setEditFullName] = useState('');
+  const [editPhoneNumber, setEditPhoneNumber] = useState('');
+  const [editRole, setEditRole] = useState('Phục vụ');
+  const [editHourlyRate, setEditHourlyRate] = useState<number>(25000);
+  const [editError, setEditError] = useState<string | null>(null);
+
+  // Mở modal sửa
+  const handleOpenEdit = (emp: Employee) => {
+    setEditingEmployee(emp);
+    setEditFullName(emp.fullName);
+    setEditPhoneNumber(emp.phoneNumber || '');
+    setEditRole(emp.role);
+    setEditHourlyRate(emp.hourlyRate);
+    setEditError(null);
+  };
+
+  const handleCloseEdit = () => {
+    setEditingEmployee(null);
+    setEditError(null);
+  };
+
+  // Submit sửa
+  const handleUpdateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingEmployee) return;
+
+    if (!editFullName.trim()) {
+      setEditError('Họ và tên nhân viên không được để trống.');
+      return;
+    }
+
+    updateEmployeeMutation.mutate(
+      {
+        id: editingEmployee.id,
+        data: {
+          fullName: editFullName.trim(),
+          phoneNumber: editPhoneNumber.trim(),
+          role: editRole,
+          hourlyRate: editHourlyRate,
+        },
+      },
+      {
+        onSuccess: () => {
+          handleCloseEdit();
+        },
+        onError: (err: any) => {
+          const message = err.response?.data?.error || err.response?.data?.message || 'Có lỗi xảy ra khi cập nhật nhân viên.';
+          setEditError(message);
+        },
+      }
+    );
+  };
+
+  // Submit thêm mới
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -274,7 +336,7 @@ export const EmployeesPage: React.FC = () => {
                 <AlertCircle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
                 <p className="text-sm font-medium text-rose-600">Không thể kết nối đến máy chủ nhân sự</p>
                 <p className="text-xs text-slate-400 mt-1">
-                  Vui lòng đảm bảo Backend Employee Service đang được khởi chạy.
+                  Vui lòng đảm bảo Backend Employee Service (Port 5001) và Gateway (Port 5000) đang được khởi chạy.
                 </p>
               </div>
             ) : !employees || employees.length === 0 ? (
@@ -307,7 +369,7 @@ export const EmployeesPage: React.FC = () => {
                             </div>
                             <div>
                               <div className="font-semibold text-slate-900 text-xs">{emp.fullName}</div>
-                              <div className="text-[10px] text-slate-400">ID: {emp.id.slice(0, 6)}...</div>
+                              <div className="text-[10px] text-slate-400">ID: {emp.id.slice(0, 8)}...</div>
                             </div>
                           </div>
                         </td>
@@ -336,8 +398,8 @@ export const EmployeesPage: React.FC = () => {
                         {/* Cột Mức lương */}
                         <td className="py-3.5 px-4 font-mono font-medium text-slate-700">
                           {emp.hourlyRate > 0 ? (
-                            <span className="flex items-center text-emerald-700">
-                              {emp.hourlyRate.toLocaleString('vi-VN')} đ/h
+                            <span className="flex items-center text-emerald-700 font-semibold">
+                              {Number(emp.hourlyRate).toLocaleString('vi-VN')} đ/h
                             </span>
                           ) : (
                             <span className="text-slate-400">Chưa đặt</span>
@@ -351,9 +413,18 @@ export const EmployeesPage: React.FC = () => {
                           </Badge>
                         </td>
 
-                        {/* Cột Thao tác */}
+                        {/* Cột Thao tác: SỬA, BẬT/TẮT, XÓA */}
                         <td className="py-3.5 px-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            {/* Nút Sửa nhân viên */}
+                            <button
+                              onClick={() => handleOpenEdit(emp)}
+                              title="Chỉnh sửa thông tin nhân viên"
+                              className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+
                             {/* Nút Bật / Tắt trạng thái */}
                             <button
                               onClick={() => handleToggleStatus(emp.id)}
@@ -388,6 +459,124 @@ export const EmployeesPage: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* ========================================================= */}
+      {/* MODAL CHỈNH SỬA THÔNG TIN NHÂN VIÊN                      */}
+      {/* ========================================================= */}
+      {editingEmployee && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <Pencil className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 text-sm">Chỉnh sửa hồ sơ nhân viên</h3>
+                  <p className="text-[11px] text-slate-400">ID: {editingEmployee.id.slice(0, 8)}... ({editingEmployee.email})</p>
+                </div>
+              </div>
+              <button
+                onClick={handleCloseEdit}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleUpdateSubmit} className="p-4 space-y-3.5">
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Họ và tên *</label>
+                <input
+                  type="text"
+                  value={editFullName}
+                  onChange={(e) => setEditFullName(e.target.value)}
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Email liên hệ (Cố định)</label>
+                <input
+                  type="email"
+                  value={editingEmployee.email}
+                  disabled
+                  className="w-full px-3 py-2 text-xs border border-slate-200 bg-slate-100 text-slate-500 rounded-lg cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">Số điện thoại</label>
+                <input
+                  type="tel"
+                  value={editPhoneNumber}
+                  onChange={(e) => setEditPhoneNumber(e.target.value)}
+                  placeholder="VD: 0987654321"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Vị trí công việc</label>
+                  <select
+                    value={editRole}
+                    onChange={(e) => setEditRole(e.target.value)}
+                    className="w-full px-2.5 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                  >
+                    <option value="Phục vụ">Phục vụ</option>
+                    <option value="Đầu bếp">Đầu bếp</option>
+                    <option value="Thu ngân">Thu ngân</option>
+                    <option value="Quản lý">Quản lý</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">Lương theo giờ (đ)</label>
+                  <input
+                    type="number"
+                    value={editHourlyRate}
+                    onChange={(e) => setEditHourlyRate(Number(e.target.value))}
+                    min="0"
+                    step="1000"
+                    className="w-full px-2.5 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    required
+                  />
+                </div>
+              </div>
+
+              {editError && (
+                <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-1.5">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>{editError}</span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCloseEdit}
+                  className="text-xs py-2 px-3.5"
+                >
+                  Hủy bỏ
+                </Button>
+                <Button
+                  type="submit"
+                  className="text-xs py-2 px-4"
+                  isLoading={updateEmployeeMutation.isPending}
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                  Lưu thay đổi
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
