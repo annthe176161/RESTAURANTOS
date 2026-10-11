@@ -121,3 +121,4 @@ export const OcrScanPage: React.FC = () => {
     </div>
   );
 };
+

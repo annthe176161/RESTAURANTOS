@@ -20,3 +20,4 @@ export interface CreateInvoiceDto {
   totalAmount: number;
   currency?: string;
 }
+

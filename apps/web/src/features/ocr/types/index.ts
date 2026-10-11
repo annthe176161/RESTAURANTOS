@@ -18,3 +18,4 @@ export interface ScanReceiptDto {
   fileName: string;
   mockRawContent?: string;
 }
+

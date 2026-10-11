@@ -12,3 +12,4 @@ export interface CreateEmployeeDto {
   email: string;
   role?: string;
 }
+

@@ -88,3 +88,4 @@ Khi cần thêm tính năng mới (Ví dụ: Quản lý Bàn ăn `tables`):
    ```
 4. **Viết Giao diện** trong `pages/TablesPage.tsx` và gọi `const { data, isLoading } = useTables();`.
 5. **Đăng ký Route** trong `src/routes/index.tsx`.
+

@@ -146,3 +146,4 @@ export const SchedulesPage: React.FC = () => {
     </div>
   );
 };
+
