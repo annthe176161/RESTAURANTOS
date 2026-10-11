@@ -160,6 +160,18 @@ export const EmployeesPage: React.FC = () => {
     }
   };
 
+  const getShortId = (id: unknown) => {
+    if (id === null || id === undefined) return '';
+    const str = String(id);
+    return str.length > 8 ? `${str.slice(0, 8)}...` : str;
+  };
+
+  const getAvatarInitial = (name: unknown) => {
+    if (!name) return 'U';
+    const str = String(name).trim();
+    return str.length > 0 ? str.charAt(0).toUpperCase() : 'U';
+  };
+
   return (
     <div className="space-y-6">
       {/* Header Trang */}
@@ -365,11 +377,11 @@ export const EmployeesPage: React.FC = () => {
                         <td className="py-3.5 px-4">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center flex-shrink-0">
-                              {emp.fullName.slice(0, 1).toUpperCase()}
+                              {getAvatarInitial(emp.fullName)}
                             </div>
                             <div>
-                              <div className="font-semibold text-slate-900 text-xs">{emp.fullName}</div>
-                              <div className="text-[10px] text-slate-400">ID: {emp.id.slice(0, 8)}...</div>
+                              <div className="font-semibold text-slate-900 text-xs">{emp.fullName || 'Chưa đặt tên'}</div>
+                              <div className="text-[10px] text-slate-400">ID: {getShortId(emp.id)}</div>
                             </div>
                           </div>
                         </td>
@@ -474,7 +486,7 @@ export const EmployeesPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 text-sm">Chỉnh sửa hồ sơ nhân viên</h3>
-                  <p className="text-[11px] text-slate-400">ID: {editingEmployee.id.slice(0, 8)}... ({editingEmployee.email})</p>
+                  <p className="text-[11px] text-slate-400">ID: {getShortId(editingEmployee.id)} ({editingEmployee.email})</p>
                 </div>
               </div>
               <button
