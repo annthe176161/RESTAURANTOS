@@ -37,6 +37,31 @@ public class EmployeeDomainTests
 
         employee.IsActive.Should().BeFalse();
     }
+
+    [Fact]
+    public void UpdateEmployeeInfo_ShouldUpdateFieldsSuccessfully()
+    {
+        var employee = new EmployeeEntity(Guid.NewGuid(), "Tran B", "b.tran@restaurantos.local", "0901234567", "Cashier", 30000);
+        employee.UpdateInfo("Tran Van Binh", "0999888777", "Manager", 55000);
+
+        employee.FullName.Should().Be("Tran Van Binh");
+        employee.PhoneNumber.Should().Be("0999888777");
+        employee.Role.Should().Be("Manager");
+        employee.HourlyRate.Should().Be(55000);
+    }
+
+    [Fact]
+    public void ToggleStatus_ShouldFlipIsActive()
+    {
+        var employee = new EmployeeEntity(Guid.NewGuid(), "Le C", "c.le@restaurantos.local");
+        employee.IsActive.Should().BeTrue();
+
+        employee.ToggleStatus();
+        employee.IsActive.Should().BeFalse();
+
+        employee.ToggleStatus();
+        employee.IsActive.Should().BeTrue();
+    }
 }
 
 public class ScheduleDomainTests

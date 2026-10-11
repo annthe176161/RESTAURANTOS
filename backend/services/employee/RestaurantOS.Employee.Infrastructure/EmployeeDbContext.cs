@@ -19,7 +19,9 @@ public class EmployeeDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.FullName).IsRequired().HasMaxLength(150);
             entity.Property(e => e.Email).IsRequired().HasMaxLength(150);
+            entity.Property(e => e.PhoneNumber).HasMaxLength(30);
             entity.Property(e => e.Role).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.HourlyRate).HasColumnType("TEXT"); // SQLite safe
             entity.HasIndex(e => e.Email).IsUnique();
         });
     }
@@ -34,24 +36,57 @@ public class EmployeeRepository : IEmployeeRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IReadOnlyList<Domain.Employee>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Domain.Employee>> GetAllAsync(
+        string? search = null, 
+        string? role = null, 
+        bool? isActive = null, 
+        CancellationToken ct = default)
     {
-        return await _dbContext.Employees.AsNoTracking().ToListAsync(cancellationToken);
+        var query = _dbContext.Employees.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            query = query.Where(e => e.FullName.ToLower().Contains(term) || e.Email.ToLower().Contains(term) || e.PhoneNumber.Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(role) && role != "all")
+        {
+            query = query.Where(e => e.Role == role);
+        }
+
+        if (isActive.HasValue)
+        {
+            query = query.Where(e => e.IsActive == isActive.Value);
+        }
+
+        return await query.OrderByDescending(e => e.CreatedAtUtc).ToListAsync(ct);
     }
 
-    public async Task<Domain.Employee?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Domain.Employee?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await _dbContext.Employees.FindAsync(new object[] { id }, cancellationToken);
+        return await _dbContext.Employees.FindAsync(new object[] { id }, ct);
     }
 
-    public async Task AddAsync(Domain.Employee employee, CancellationToken cancellationToken = default)
+    public async Task<Domain.Employee?> GetByEmailAsync(string email, CancellationToken ct = default)
     {
-        await _dbContext.Employees.AddAsync(employee, cancellationToken);
+        var normalized = email.Trim().ToLowerInvariant();
+        return await _dbContext.Employees.FirstOrDefaultAsync(e => e.Email == normalized, ct);
     }
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task AddAsync(Domain.Employee employee, CancellationToken ct = default)
     {
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.Employees.AddAsync(employee, ct);
+    }
+
+    public Task DeleteAsync(Domain.Employee employee, CancellationToken ct = default)
+    {
+        _dbContext.Employees.Remove(employee);
+        return Task.CompletedTask;
+    }
+
+    public async Task SaveChangesAsync(CancellationToken ct = default)
+    {
+        await _dbContext.SaveChangesAsync(ct);
     }
 }
-
