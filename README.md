@@ -69,6 +69,13 @@ dotnet run --project backend/services/ocr/RestaurantOS.Ocr.Api
 dotnet run --project backend/gateway/RestaurantOS.Gateway
 ```
 
+**6. Khởi chạy Web Frontend (Port 5173):**
+```bash
+cd apps/web
+npm run dev
+```
+Truy cập trình duyệt: `http://localhost:5173` để trải nghiệm giao diện quản trị đầy đủ.
+
 ### Kiểm tra kết quả qua Gateway:
 - **Kiểm tra Gateway status**: `GET http://localhost:5000/`
 - **Kiểm tra Health Gateway**: `GET http://localhost:5000/health`
@@ -104,3 +111,4 @@ docker compose -f deploy/compose/docker-compose.yml down
 - [`docs/development/getting-started.md`](docs/development/getting-started.md): Hướng dẫn cho Junior Developer thiết lập môi trường và code mới.
 - [`docs/releases/versioning-and-rollout.md`](docs/releases/versioning-and-rollout.md): Quy chuẩn Semantic Versioning và rollout từng service.
 - [`docs/decisions/`](docs/decisions/): Các Architecture Decision Record (ADR-001 đến ADR-004).
+

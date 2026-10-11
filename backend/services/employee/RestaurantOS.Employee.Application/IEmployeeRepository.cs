@@ -13,3 +13,4 @@ public interface IEmployeeRepository
 public record EmployeeDto(Guid Id, string FullName, string Email, string Role, bool IsActive, DateTime CreatedAtUtc);
 
 public record CreateEmployeeRequest(string FullName, string Email, string? Role);
+

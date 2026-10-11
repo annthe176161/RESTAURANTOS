@@ -79,3 +79,4 @@ Mỗi service được tổ chức nhất quán theo 4 tầng:
 4. **Api**:
    - Cung cấp HTTP Endpoints, cấu hình Dependency Injection, Middleware, Health Check.
    - Reference `Application` và `Infrastructure`.
+

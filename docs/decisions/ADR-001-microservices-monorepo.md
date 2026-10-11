@@ -20,3 +20,4 @@ Dự án RestaurantOS định hướng phát triển lâu dài phục vụ cả 
 ### Rủi ro & Cách khắc phục:
 - *Rủi ro*: Lập trình viên có thể vô tình reference chéo project giữa các service.
 - *Khắc phục*: Sử dụng `Directory.Build.props` và rà soát CI pipeline nghiêm ngặt ngăn chặn reference chéo service.
+

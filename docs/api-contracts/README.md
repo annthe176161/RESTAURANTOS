@@ -52,3 +52,4 @@ Khi có lỗi `400` hoặc `422`, các service trả về format nhất quán:
   - Áp dụng URL Path Versioning: `/api/v1/employees` -> `/api/v2/employees`.
   - Giữ lại API cũ tối thiểu 6 tháng trước khi ngừng hỗ trợ (Deprecation Policy).
   - Khuyến khích các thay đổi không phá vỡ (Non-breaking changes): Thêm trường mới tùy chọn (optional field), không xóa hoặc đổi tên trường đang có.
+

@@ -13,3 +13,4 @@ public interface IOcrRepository
 public record OcrDocumentDto(Guid Id, string FileName, string ExtractedText, OcrStatus Status, DateTime CreatedAtUtc);
 
 public record ScanReceiptRequest(string FileName, string? MockRawContent);
+

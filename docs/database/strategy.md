@@ -47,3 +47,4 @@ Trong hệ thống RestaurantOS:
 - **Hướng tiếp cận của RestaurantOS**:
   - Mỗi service đảm bảo tính nhất quán nội bộ (ACID) trong database của riêng mình.
   - Phối hợp giữa các service sử dụng nguyên lý **Eventual Consistency** (Nhất quán cuối cùng) thông qua Message Broker hoặc Transactional Outbox Pattern khi hệ thống phát triển thêm các nghiệp vụ phức tạp.
+

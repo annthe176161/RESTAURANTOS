@@ -37,3 +37,4 @@ Khi build image trên CI/CD:
 2. **Rollback Cơ Sở Dữ Liệu**:
    - Tuân thủ nguyên tắc Expand/Contract (chỉ thêm cột mới, không xóa cột cũ ngay).
    - Nhờ đó, việc rollback code về phiên bản cũ sẽ không gây sập ứng dụng do thiếu cột trong CSDL.
+

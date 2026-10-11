@@ -118,3 +118,4 @@ public class OcrDomainTests
         doc.ExtractedText.Should().Be("Extracted receipt data 200k");
     }
 }
+

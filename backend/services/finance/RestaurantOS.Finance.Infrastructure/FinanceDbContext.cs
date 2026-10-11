@@ -54,3 +54,4 @@ public class FinanceRepository : IFinanceRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
+

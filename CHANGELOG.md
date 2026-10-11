@@ -21,6 +21,12 @@ Tất cả các thay đổi đáng chú ý của dự án RestaurantOS sẽ đư
   - `Schedule Service`: Quản lý phân ca làm việc, ca kíp theo `EmployeeId` không phụ thuộc DB nhân viên.
   - `Finance Service`: Quản lý hóa đơn thu chi, trạng thái thanh toán và CSDL riêng.
   - `OCR Service`: Quản lý tài liệu bóc tách hóa đơn, mô phỏng quá trình OCR và kết quả draft.
+- **Web Frontend (`apps/web`)**:
+  - Xây dựng trên React 19 + TypeScript + Vite + Tailwind CSS.
+  - Áp dụng kiến trúc chuẩn doanh nghiệp **Feature-based (Bulletproof React)**.
+  - Tách biệt Server State (TanStack Query v5) và Client State (Zustand).
+  - Tích hợp Axios Interceptor trỏ duy nhất vào API Gateway (Port 5000).
+  - Hoàn thiện 5 Pages: Dashboard, Employees, Schedules, Finance, OCR Scan.
 - **Testing**:
   - `RestaurantOS.UnitTests`: Bộ kiểm thử đơn vị cho toàn bộ Domain logic của 4 service (11 tests passed).
   - `RestaurantOS.IntegrationTests`: Bộ kiểm thử tích hợp kiểm tra endpoint Health Check của Gateway và 4 services (6 tests passed).
@@ -30,3 +36,4 @@ Tất cả các thay đổi đáng chú ý của dự án RestaurantOS sẽ đư
   - GitHub Actions CI workflow tự động kiểm thử và build.
 - **Tài liệu**:
   - Tài liệu kiến trúc tổng thể, ranh giới dịch vụ, API contracts, chiến lược database, và bộ tài liệu quyết định kiến trúc ADR (001 - 004).
+

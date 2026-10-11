@@ -13,3 +13,4 @@ public interface IFinanceRepository
 public record InvoiceDto(Guid Id, string InvoiceNumber, decimal TotalAmount, string Currency, InvoiceStatus Status, DateTime IssuedAtUtc);
 
 public record CreateInvoiceRequest(string InvoiceNumber, decimal TotalAmount, string? Currency);
+

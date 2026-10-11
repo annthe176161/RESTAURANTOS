@@ -40,3 +40,4 @@ public class OcrDocument
         Status = OcrStatus.Failed;
     }
 }
+

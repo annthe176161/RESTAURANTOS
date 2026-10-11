@@ -13,3 +13,4 @@ public interface IScheduleRepository
 public record ShiftDto(Guid Id, Guid EmployeeId, string ShiftName, DateTime StartTimeUtc, DateTime EndTimeUtc, bool IsCancelled);
 
 public record CreateShiftRequest(Guid EmployeeId, string ShiftName, DateTime StartTimeUtc, DateTime EndTimeUtc);
+

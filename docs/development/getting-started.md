@@ -64,3 +64,4 @@ Khi bạn muốn thêm một tính năng nghiệp vụ (ví dụ: cập nhật s
    - Thêm endpoint `app.MapPut("/api/employees/{id:guid}/phone", ...)`.
 5. **Chạy test xác minh**:
    - `dotnet test backend/RestaurantOS.sln`.
+

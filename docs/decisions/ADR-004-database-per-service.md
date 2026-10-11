@@ -15,3 +15,4 @@ Khi xây dựng hệ thống quản lý nhà hàng, việc dùng chung một dat
 - **Độc lập triển khai (Decoupling)**: Thay đổi cấu trúc bảng của Employee Service không bao giờ làm sập Finance Service.
 - **Tối ưu hóa công nghệ**: Mỗi service có thể tự do lựa chọn loại CSDL phù hợp nhất với nhu cầu của mình trong tương lai (Quan hệ, Document, Time-series, Cache).
 - **Hạn chế**: Không thể dùng khóa ngoại (Foreign Key) xuyên DB hoặc giao dịch SQL ACID bao quát toàn hệ thống. Việc này được xử lý bằng cách lưu ID tham chiếu và áp dụng tính nhất quán cuối cùng (Eventual Consistency).
+

@@ -14,3 +14,4 @@ Kích hoạt tính năng **Central Package Management (CPM)** của MSBuild thô
 - **Quản lý phiên bản tập trung**: Toàn bộ version thư viện được khai báo duy nhất tại `Directory.Packages.props`.
 - **File `.csproj` gọn gàng**: Các project con chỉ cần khai báo `<PackageReference Include="TênGói" />` mà không cần ghi số version.
 - **Dễ dàng nâng cấp bảo mật**: Khi có bản vá lỗ hổng của thư viện, chỉ cần sửa 1 dòng trong file cấu hình gốc.
+

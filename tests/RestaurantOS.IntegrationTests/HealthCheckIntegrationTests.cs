@@ -117,3 +117,4 @@ public class OcrServiceIntegrationTests : IClassFixture<WebApplicationFactory<Oc
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }
+

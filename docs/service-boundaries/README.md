@@ -66,3 +66,4 @@ Tài liệu này định nghĩa rõ ranh giới trách nhiệm và quyền sở 
 | **Schedule** | `schedule.db` | `Shifts` | DB của Employee, Finance, OCR |
 | **Finance** | `finance.db` | `Invoices` | DB của Employee, Schedule, OCR |
 | **OCR** | `ocr.db` | `Documents` | DB của Employee, Schedule, Finance |
+

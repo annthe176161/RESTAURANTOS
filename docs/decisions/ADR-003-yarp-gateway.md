@@ -14,3 +14,4 @@ Sử dụng **YARP (Yet Another Reverse Proxy)** — một thư viện Reverse P
 - **Tích hợp tự nhiên với .NET**: Viết cấu hình routing trực tiếp trong `appsettings.json` hoặc code C#.
 - **Loại bỏ sự cồng kềnh**: Không cần cài đặt các gateway bên ngoài như Kong, Nginx hoặc Ocelot vốn đã cũ và ít cập nhật.
 - **Ranh giới rõ ràng**: Gateway chỉ làm nhiệm vụ proxy, SSL termination, CORS và Central Health Check, không ôm đồm business logic.
+
