@@ -73,7 +73,7 @@ export const MainLayout: React.FC = () => {
               <Store className="w-4 h-4 text-emerald-400" />
               <span className="font-medium text-slate-300">Cơ sở: Chi nhánh chính</span>
             </div>
-            <p className="text-[11px] text-slate-500">Giờ phục vụ: 08:00 - 23:00 hàng ngày</p>
+            <p className="text-[11px] text-slate-500">Giờ phục vụ: 11:00 - 22:30 hàng ngày</p>
           </div>
         )}
       </aside>

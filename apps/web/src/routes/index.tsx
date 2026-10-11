@@ -5,11 +5,13 @@ import { EmployeesPage } from '../features/employees/pages/EmployeesPage';
 import { SchedulesPage } from '../features/schedules/pages/SchedulesPage';
 import { FinancePage } from '../features/finance/pages/FinancePage';
 import { OcrScanPage } from '../features/ocr/pages/OcrScanPage';
+import { RouteErrorBoundary } from '../components/feedback/RouteErrorBoundary';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,
@@ -38,4 +40,3 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
-

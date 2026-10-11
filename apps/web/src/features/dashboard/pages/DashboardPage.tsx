@@ -14,12 +14,18 @@ export const DashboardPage: React.FC = () => {
   const { data: invoices } = useInvoices();
   const { data: ocrDocs } = useOcrDocuments();
 
-  const totalRevenue = invoices?.reduce((sum, inv) => sum + Number(inv.totalAmount || 0), 0) ?? 0;
+  // Đảm bảo dữ liệu luôn là mảng, tránh trường hợp API lỗi trả về object hoặc undefined/null
+  const invoiceList = Array.isArray(invoices) ? invoices : [];
+  const employeeList = Array.isArray(employees) ? employees : [];
+  const shiftList = Array.isArray(shifts) ? shifts : [];
+  const ocrList = Array.isArray(ocrDocs) ? ocrDocs : [];
+
+  const totalRevenue = invoiceList.reduce((sum, inv) => sum + Number(inv.totalAmount || 0), 0);
 
   const stats = [
     {
       title: 'Đội ngũ nhân sự',
-      value: employees?.length ?? 0,
+      value: employeeList.length,
       subtext: 'nhân viên đang hoạt động',
       icon: Users,
       link: '/employees',
@@ -27,7 +33,7 @@ export const DashboardPage: React.FC = () => {
     },
     {
       title: 'Phân ca làm việc',
-      value: shifts?.length ?? 0,
+      value: shiftList.length,
       subtext: 'ca trực đã lên lịch',
       icon: Calendar,
       link: '/schedules',
@@ -36,14 +42,14 @@ export const DashboardPage: React.FC = () => {
     {
       title: 'Hóa đơn & Doanh thu',
       value: `${totalRevenue.toLocaleString('vi-VN')} đ`,
-      subtext: `${invoices?.length ?? 0} hóa đơn ghi nhận`,
+      subtext: `${invoiceList.length} hóa đơn ghi nhận`,
       icon: Receipt,
       link: '/finance',
       color: 'bg-amber-50 text-amber-700',
     },
     {
       title: 'Chứng từ bóc tách AI',
-      value: ocrDocs?.length ?? 0,
+      value: ocrList.length,
       subtext: 'tài liệu hóa đơn đã xử lý',
       icon: ScanLine,
       link: '/ocr',
@@ -101,13 +107,13 @@ export const DashboardPage: React.FC = () => {
             </Link>
           </div>
 
-          {!shifts || shifts.length === 0 ? (
+          {shiftList.length === 0 ? (
             <div className="py-8 text-center text-slate-400 text-sm">
               Hôm nay chưa có ca trực nào được xếp. Hãy vào mục Lịch làm việc để xếp ca!
             </div>
           ) : (
             <div className="space-y-3">
-              {shifts.slice(0, 4).map((s) => (
+              {shiftList.slice(0, 4).map((s) => (
                 <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50/70 border border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
