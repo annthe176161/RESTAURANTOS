@@ -7,7 +7,7 @@ import {
   ScanLine, 
   LayoutDashboard, 
   UtensilsCrossed, 
-  Server
+  Store
 } from 'lucide-react';
 import { useUiStore } from '../stores/useThemeStore';
 import { Header } from './components/Header';
@@ -17,11 +17,11 @@ export const MainLayout: React.FC = () => {
   const { isSidebarOpen } = useUiStore();
 
   const navItems = [
-    { label: 'Tổng quan hệ thống', path: '/', icon: LayoutDashboard },
-    { label: 'Nhân viên (Employee)', path: '/employees', icon: Users },
-    { label: 'Lịch làm việc (Schedule)', path: '/schedules', icon: Calendar },
-    { label: 'Tài chính (Finance)', path: '/finance', icon: Receipt },
-    { label: 'Bóc tách hóa đơn (OCR)', path: '/ocr', icon: ScanLine },
+    { label: 'Tổng quan', path: '/', icon: LayoutDashboard },
+    { label: 'Quản lý nhân viên', path: '/employees', icon: Users },
+    { label: 'Lịch làm & Ca trực', path: '/schedules', icon: Calendar },
+    { label: 'Tài chính & Hóa đơn', path: '/finance', icon: Receipt },
+    { label: 'Bóc tách chứng từ', path: '/ocr', icon: ScanLine },
   ];
 
   return (
@@ -39,7 +39,7 @@ export const MainLayout: React.FC = () => {
           {isSidebarOpen && (
             <div className="overflow-hidden">
               <h1 className="font-bold text-lg text-white leading-none">RestaurantOS</h1>
-              <span className="text-xs text-emerald-400 font-medium">Microservices Web</span>
+              <span className="text-xs text-emerald-400 font-medium">Quản Lý Nhà Hàng</span>
             </div>
           )}
         </div>
@@ -66,31 +66,31 @@ export const MainLayout: React.FC = () => {
           })}
         </nav>
 
-        {/* Microservices Gateway Indicator */}
+        {/* Thông tin cơ sở / chi nhánh nhà hàng */}
         {isSidebarOpen && (
           <div className="p-4 border-t border-slate-800 text-xs text-slate-400 bg-slate-950/40">
             <div className="flex items-center gap-2 mb-1">
-              <Server className="w-4 h-4 text-emerald-400" />
-              <span className="font-medium text-slate-300">Gateway: Port 5000</span>
+              <Store className="w-4 h-4 text-emerald-400" />
+              <span className="font-medium text-slate-300">Cơ sở: Chi nhánh chính</span>
             </div>
-            <p className="text-[11px] text-slate-500">Tất cả request được proxy qua YARP Gateway</p>
+            <p className="text-[11px] text-slate-500">Giờ phục vụ: 08:00 - 23:00 hàng ngày</p>
           </div>
         )}
       </aside>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Modular Header */}
+        {/* Header */}
         <Header />
 
-        {/* Page Content */}
+        {/* Nội dung trang */}
         <main className="flex-1 p-6 md:p-8 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
         </main>
 
-        {/* Modular Footer */}
+        {/* Footer */}
         <Footer />
       </div>
     </div>

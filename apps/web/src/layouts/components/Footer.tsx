@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, ShieldCheck, HeartHandshake, FileCode2 } from 'lucide-react';
+import { Clock, CheckCircle2, Headphones, HelpCircle } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -25,41 +25,40 @@ export const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="bg-white border-t border-slate-200/80 px-6 py-4 text-xs text-slate-500 mt-auto">
+    <footer className="bg-white border-t border-slate-200/80 px-6 py-3.5 text-xs text-slate-500 mt-auto">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-        {/* Bản quyền & Kiến trúc */}
+        {/* Bản quyền & Hệ thống */}
         <div className="flex items-center gap-2 text-center sm:text-left">
-          <span className="font-semibold text-slate-700">RestaurantOS</span>
-          <span>© 2026 — Nền tảng quản lý nhà hàng Microservices</span>
+          <span className="font-semibold text-slate-800">RestaurantOS</span>
+          <span className="text-slate-400">|</span>
+          <span>Hệ thống quản lý nhà hàng chuyên nghiệp</span>
         </div>
 
-        {/* Thông tin môi trường, đồng hồ thời gian thực */}
+        {/* Trạng thái, đồng hồ thời gian thực và hỗ trợ */}
         <div className="flex flex-wrap items-center justify-center gap-4 text-slate-400">
           {currentTime && (
-            <div className="flex items-center gap-1.5 font-mono text-slate-600 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-100">
+            <div className="flex items-center gap-1.5 font-mono text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-100">
               <Clock className="w-3.5 h-3.5 text-emerald-600" />
               <span>{currentTime}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-1 text-slate-500">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>.NET 8 LTS</span>
+          <div className="flex items-center gap-1 text-emerald-700 font-medium">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Hệ thống ổn định</span>
           </div>
 
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noreferrer"
+          <button
+            onClick={() => alert('Tổng đài hỗ trợ kỹ thuật RestaurantOS: 1900 xxxx (24/7)')}
             className="flex items-center gap-1 text-slate-500 hover:text-emerald-700 transition-colors"
           >
-            <FileCode2 className="w-3.5 h-3.5" />
-            <span>Tài liệu API</span>
-          </a>
+            <Headphones className="w-3.5 h-3.5" />
+            <span>Hỗ trợ kỹ thuật</span>
+          </button>
 
           <span className="flex items-center gap-1 text-slate-400">
-            <HeartHandshake className="w-3.5 h-3.5 text-rose-400" />
-            <span>Build v0.1.0</span>
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>v0.1.0</span>
           </span>
         </div>
       </div>

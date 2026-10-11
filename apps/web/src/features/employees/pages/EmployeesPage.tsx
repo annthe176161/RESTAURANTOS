@@ -35,7 +35,7 @@ export const EmployeesPage: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Quản Lý Nhân Viên</h2>
           <p className="text-sm text-slate-500">
-            Dữ liệu được sở hữu độc lập bởi <strong className="text-emerald-700">Employee Service (Port 5001)</strong>
+            Hồ sơ nhân viên, vị trí công việc và trạng thái làm việc tại nhà hàng
           </p>
         </div>
       </div>
@@ -55,19 +55,19 @@ export const EmployeesPage: React.FC = () => {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Ví dụ: Nguyễn Văn A"
+                placeholder="Ví dụ: Nguyễn Văn An"
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Email</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Email liên hệ</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="a.nguyen@restaurantos.local"
+                placeholder="an.nguyen@restaurant.vn"
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               />
@@ -97,7 +97,7 @@ export const EmployeesPage: React.FC = () => {
 
             {createEmployeeMutation.isError && (
               <p className="text-xs text-rose-600 mt-2">
-                Không thể tạo nhân viên. Vui lòng kiểm tra email có bị trùng không.
+                Không thể tạo nhân viên. Vui lòng kiểm tra lại địa chỉ email.
               </p>
             )}
           </form>
@@ -115,14 +115,14 @@ export const EmployeesPage: React.FC = () => {
           ) : isError ? (
             <div className="p-6 text-center text-slate-500">
               <AlertCircle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-rose-600">Không thể kết nối đến Employee Service</p>
+              <p className="text-sm font-medium text-rose-600">Không thể tải dữ liệu nhân viên</p>
               <p className="text-xs text-slate-400 mt-1">
-                Hãy đảm bảo API Gateway (5000) và Employee Service (5001) đang chạy.
+                Vui lòng kiểm tra lại kết nối máy chủ hoặc thử lại sau ít phút.
               </p>
             </div>
           ) : !employees || employees.length === 0 ? (
             <div className="text-center py-10 text-slate-400">
-              Chưa có nhân viên nào trong hệ thống. Hãy thêm nhân viên đầu tiên!
+              Chưa có nhân viên nào trong danh sách. Hãy thêm nhân viên đầu tiên!
             </div>
           ) : (
             <div className="overflow-x-auto">

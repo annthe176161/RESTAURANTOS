@@ -1,5 +1,6 @@
 import React from 'react';
-import { Server, Users, Calendar, Receipt, ScanLine, ShieldCheck } from 'lucide-react';
+import { Users, Calendar, Receipt, ScanLine, ArrowUpRight, Clock, ChefHat, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Card } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
 import { useEmployees } from '../../employees/api/getEmployees';
@@ -8,139 +9,165 @@ import { useInvoices } from '../../finance/api/getInvoices';
 import { useOcrDocuments } from '../../ocr/api/getOcrDocuments';
 
 export const DashboardPage: React.FC = () => {
-  const { data: employees, isSuccess: empSuccess } = useEmployees();
-  const { data: shifts, isSuccess: shiftSuccess } = useShifts();
-  const { data: invoices, isSuccess: finSuccess } = useInvoices();
-  const { data: ocrDocs, isSuccess: ocrSuccess } = useOcrDocuments();
+  const { data: employees } = useEmployees();
+  const { data: shifts } = useShifts();
+  const { data: invoices } = useInvoices();
+  const { data: ocrDocs } = useOcrDocuments();
 
-  const services = [
+  const totalRevenue = invoices?.reduce((sum, inv) => sum + Number(inv.totalAmount || 0), 0) ?? 0;
+
+  const stats = [
     {
-      name: 'Employee Service',
-      port: 5001,
-      route: '/api/employees',
+      title: 'Đội ngũ nhân sự',
+      value: employees?.length ?? 0,
+      subtext: 'nhân viên đang hoạt động',
       icon: Users,
-      isOnline: empSuccess,
-      count: employees?.length ?? 0,
-      unit: 'nhân sự',
-      db: 'employee.db (SQLite)',
+      link: '/employees',
+      color: 'bg-emerald-50 text-emerald-700',
     },
     {
-      name: 'Schedule Service',
-      port: 5002,
-      route: '/api/schedules',
+      title: 'Phân ca làm việc',
+      value: shifts?.length ?? 0,
+      subtext: 'ca trực đã lên lịch',
       icon: Calendar,
-      isOnline: shiftSuccess,
-      count: shifts?.length ?? 0,
-      unit: 'ca trực',
-      db: 'schedule.db (SQLite)',
+      link: '/schedules',
+      color: 'bg-blue-50 text-blue-700',
     },
     {
-      name: 'Finance Service',
-      port: 5003,
-      route: '/api/finance',
+      title: 'Hóa đơn & Doanh thu',
+      value: `${totalRevenue.toLocaleString('vi-VN')} đ`,
+      subtext: `${invoices?.length ?? 0} hóa đơn ghi nhận`,
       icon: Receipt,
-      isOnline: finSuccess,
-      count: invoices?.length ?? 0,
-      unit: 'hóa đơn',
-      db: 'finance.db (SQLite)',
+      link: '/finance',
+      color: 'bg-amber-50 text-amber-700',
     },
     {
-      name: 'OCR Service',
-      port: 5004,
-      route: '/api/ocr',
+      title: 'Chứng từ bóc tách AI',
+      value: ocrDocs?.length ?? 0,
+      subtext: 'tài liệu hóa đơn đã xử lý',
       icon: ScanLine,
-      isOnline: ocrSuccess,
-      count: ocrDocs?.length ?? 0,
-      unit: 'tài liệu quét',
-      db: 'ocr.db (SQLite)',
+      link: '/ocr',
+      color: 'bg-purple-50 text-purple-700',
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Banner */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 md:p-8 rounded-2xl shadow-sm">
-        <div className="max-w-3xl">
-          <Badge variant="success">Microservices Foundation Ready</Badge>
+      {/* Banner Chào Mừng */}
+      <div className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white p-6 md:p-8 rounded-2xl shadow-sm">
+        <div className="max-w-2xl">
+          <Badge variant="success">Hệ Thống Trực Tuyến</Badge>
           <h1 className="text-2xl md:text-3xl font-bold mt-3 mb-2">
-            Chào mừng bạn đến với RestaurantOS
+            Chào mừng trở lại, Quản Lý Nhà Hàng!
           </h1>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            Hệ thống quản lý nhà hàng chạy trên kiến trúc Microservices phân tán với .NET 8, YARP Gateway và Frontend React 18/TypeScript sạch sẽ, chuẩn doanh nghiệp.
+          <p className="text-emerald-100 text-sm leading-relaxed">
+            Dưới đây là tóm tắt tình hình nhân sự, ca kíp và tài chính của nhà hàng trong ngày hôm nay.
           </p>
         </div>
       </div>
 
-      {/* Gateway Status Header */}
-      <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-600 text-white rounded-lg">
-            <Server className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-emerald-950">
-              API Gateway Trung Tâm (YARP Reverse Proxy)
-            </div>
-            <div className="text-xs text-emerald-700">
-              Cổng tiếp nhận: <code>http://localhost:5000</code> — Định tuyến tự động đến các Microservices
-            </div>
-          </div>
-        </div>
-        <Badge variant="success">Hoạt động bình thường</Badge>
-      </div>
-
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {services.map((svc) => {
-          const Icon = svc.icon;
+      {/* 4 Thẻ Thống Kê Chính */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {stats.map((item) => {
+          const Icon = item.icon;
           return (
-            <Card key={svc.name} className="flex flex-col justify-between hover:border-slate-300 transition-colors">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2.5 rounded-lg bg-slate-100 text-slate-700">
+            <Link key={item.title} to={item.link}>
+              <Card className="h-full hover:border-emerald-300 hover:shadow-md transition-all">
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`p-2.5 rounded-xl ${item.color}`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <Badge variant={svc.isOnline ? 'success' : 'warning'}>
-                    {svc.isOnline ? 'Đã kết nối' : 'Chờ service'}
-                  </Badge>
+                  <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-sm">{svc.name}</h3>
-                <p className="text-xs text-slate-500 font-mono mt-0.5">Port {svc.port} • {svc.route}</p>
-                <div className="mt-4 pt-4 border-t border-slate-100">
-                  <div className="text-2xl font-bold text-slate-800">{svc.count}</div>
-                  <div className="text-xs text-slate-500">{svc.unit} đã ghi nhận</div>
-                </div>
-              </div>
-              <div className="mt-4 pt-2 text-[11px] text-slate-400 font-mono border-t border-slate-50">
-                DB: {svc.db}
-              </div>
-            </Card>
+                <div className="text-xs font-medium text-slate-500 mb-1">{item.title}</div>
+                <div className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">{item.value}</div>
+                <div className="text-xs text-slate-400 mt-2">{item.subtext}</div>
+              </Card>
+            </Link>
           );
         })}
       </div>
 
-      {/* Clean Architecture Principles Card */}
-      <Card>
-        <div className="flex items-center gap-2 mb-4 text-slate-900 font-semibold">
-          <ShieldCheck className="w-5 h-5 text-emerald-600" />
-          <h3>Nguyên Tắc Kiến Trúc Frontend Đang Áp Dụng</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600">
-          <div className="p-3 bg-slate-50 rounded-lg">
-            <strong className="text-slate-800 block mb-1">1. Feature-Based Isolation</strong>
-            Mỗi nghiệp vụ (`features/employees`, `features/schedules`, v.v.) khép kín gồm api, types, pages.
+      {/* Khối Hoạt Động Nhà Hàng Nhanh */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <ChefHat className="w-5 h-5 text-emerald-600" />
+              <h3 className="font-semibold text-slate-900">Vận hành ca kíp trong ngày</h3>
+            </div>
+            <Link to="/schedules" className="text-xs text-emerald-600 hover:text-emerald-700 font-medium">
+              Xem tất cả ca
+            </Link>
           </div>
-          <div className="p-3 bg-slate-50 rounded-lg">
-            <strong className="text-slate-800 block mb-1">2. Single Gateway Communication</strong>
-            Toàn bộ HTTP call đi qua <code>http://localhost:5000</code>. Client không biết port nội bộ của backend.
+
+          {!shifts || shifts.length === 0 ? (
+            <div className="py-8 text-center text-slate-400 text-sm">
+              Hôm nay chưa có ca trực nào được xếp. Hãy vào mục Lịch làm việc để xếp ca!
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {shifts.slice(0, 4).map((s) => (
+                <div key={s.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50/70 border border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+                      Ca
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-slate-800">{s.shiftName}</div>
+                      <div className="text-xs text-slate-400 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {new Date(s.startTimeUtc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(s.endTimeUtc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    </div>
+                  </div>
+                  <Badge variant={s.isCancelled ? 'danger' : 'success'}>
+                    {s.isCancelled ? 'Đã hủy' : 'Đang hoạt động'}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+
+        <Card className="lg:col-span-1">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+            <h3 className="font-semibold text-slate-900">Thao tác nhanh</h3>
           </div>
-          <div className="p-3 bg-slate-50 rounded-lg">
-            <strong className="text-slate-800 block mb-1">3. Server & Client State Separate</strong>
-            TanStack Query quản lý cache và retry tự động; Zustand quản lý giao diện UI.
+
+          <div className="space-y-2.5">
+            <Link
+              to="/employees"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200/80 hover:bg-slate-50 text-xs font-medium text-slate-700 transition-colors"
+            >
+              <span>Thêm nhân viên mới</span>
+              <span className="text-emerald-600">→</span>
+            </Link>
+            <Link
+              to="/schedules"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200/80 hover:bg-slate-50 text-xs font-medium text-slate-700 transition-colors"
+            >
+              <span>Xếp ca trực hôm nay</span>
+              <span className="text-emerald-600">→</span>
+            </Link>
+            <Link
+              to="/finance"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200/80 hover:bg-slate-50 text-xs font-medium text-slate-700 transition-colors"
+            >
+              <span>Ghi nhận hóa đơn / thu chi</span>
+              <span className="text-emerald-600">→</span>
+            </Link>
+            <Link
+              to="/ocr"
+              className="flex items-center justify-between p-3 rounded-lg border border-slate-200/80 hover:bg-slate-50 text-xs font-medium text-slate-700 transition-colors"
+            >
+              <span>Tải ảnh quét hóa đơn nhập hàng</span>
+              <span className="text-emerald-600">→</span>
+            </Link>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };
-

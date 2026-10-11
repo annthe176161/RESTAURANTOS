@@ -45,7 +45,7 @@ export const FinancePage: React.FC = () => {
       <div>
         <h2 className="text-2xl font-bold text-slate-900">Quản Lý Tài Chính & Hóa Đơn</h2>
         <p className="text-sm text-slate-500">
-          Dữ liệu sở hữu độc quyền bởi <strong className="text-emerald-700">Finance Service (Port 5003)</strong>
+          Ghi nhận hóa đơn bán hàng, phiếu thu chi và theo dõi dòng tiền nhà hàng
         </p>
       </div>
 
@@ -58,12 +58,12 @@ export const FinancePage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Số hóa đơn / Mã phiếu</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Mã hóa đơn / Phiếu thu</label>
               <input
                 type="text"
                 value={invoiceNumber}
                 onChange={(e) => setInvoiceNumber(e.target.value)}
-                placeholder="VD: INV-2026-001"
+                placeholder="VD: HD-001"
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 required
               />
@@ -103,7 +103,7 @@ export const FinancePage: React.FC = () => {
           ) : isError ? (
             <div className="p-6 text-center text-slate-500">
               <AlertCircle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-rose-600">Không thể kết nối đến Finance Service</p>
+              <p className="text-sm font-medium text-rose-600">Không thể tải dữ liệu hóa đơn</p>
             </div>
           ) : !invoices || invoices.length === 0 ? (
             <div className="text-center py-10 text-slate-400">
@@ -115,8 +115,8 @@ export const FinancePage: React.FC = () => {
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-500 text-xs">
                     <th className="pb-3 font-medium">Mã hóa đơn</th>
-                    <th className="pb-3 font-medium">Tổng tiền</th>
-                    <th className="pb-3 font-medium">Thời gian</th>
+                    <th className="pb-3 font-medium">Số tiền</th>
+                    <th className="pb-3 font-medium">Ngày lập</th>
                     <th className="pb-3 font-medium">Trạng thái</th>
                   </tr>
                 </thead>
@@ -142,4 +142,3 @@ export const FinancePage: React.FC = () => {
     </div>
   );
 };
-

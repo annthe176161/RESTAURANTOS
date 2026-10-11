@@ -27,9 +27,9 @@ export const OcrScanPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900">Bóc Tách Hóa Đơn AI (OCR Service)</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Bóc Tách Hóa Đơn Tự Động (AI)</h2>
         <p className="text-sm text-slate-500">
-          Trích xuất dữ liệu thô độc lập bởi <strong className="text-emerald-700">OCR Service (Port 5004)</strong>
+          Chụp ảnh hoặc tải lên chứng từ nhập hàng để bóc tách thông tin tự động
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export const OcrScanPage: React.FC = () => {
         <Card className="lg:col-span-1 h-fit">
           <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
             <UploadCloud className="w-5 h-5 text-emerald-600" />
-            <h3 className="font-semibold text-slate-900">Mô phỏng tải ảnh hóa đơn</h3>
+            <h3 className="font-semibold text-slate-900">Tải ảnh hóa đơn</h3>
           </div>
 
           <form onSubmit={handleScan} className="space-y-4">
@@ -54,7 +54,7 @@ export const OcrScanPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Văn bản mô phỏng bóc tách</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Nội dung chứng từ</label>
               <textarea
                 value={sampleContent}
                 onChange={(e) => setSampleContent(e.target.value)}
@@ -62,7 +62,7 @@ export const OcrScanPage: React.FC = () => {
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
               <p className="text-[11px] text-slate-400 mt-1">
-                Nguyên tắc Human-in-the-loop: Dữ liệu OCR lưu tạm, người dùng duyệt rồi mới tạo hóa đơn chính thức.
+                Ghi chú: Dữ liệu sau khi quét sẽ ở dạng bản nháp để bạn kiểm tra trước khi ghi nhận thành hóa đơn.
               </p>
             </div>
 
@@ -87,11 +87,11 @@ export const OcrScanPage: React.FC = () => {
           ) : isError ? (
             <div className="p-6 text-center text-slate-500">
               <AlertCircle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-rose-600">Không thể kết nối đến OCR Service</p>
+              <p className="text-sm font-medium text-rose-600">Không thể tải lịch sử bóc tách</p>
             </div>
           ) : !documents || documents.length === 0 ? (
             <div className="text-center py-10 text-slate-400">
-              Chưa có tài liệu bóc tách nào. Hãy thử tải lên hóa đơn mẫu!
+              Chưa có tài liệu nào được quét. Hãy thử tải lên hóa đơn mẫu!
             </div>
           ) : (
             <div className="space-y-4">
@@ -121,4 +121,3 @@ export const OcrScanPage: React.FC = () => {
     </div>
   );
 };
-

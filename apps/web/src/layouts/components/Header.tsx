@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Search, Activity, Plus, Users, Calendar, Receipt, ScanLine } from 'lucide-react';
+import { Menu, Search, Plus, Users, Calendar, Receipt, ScanLine } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUiStore } from '../../stores/useThemeStore';
 import { NotificationsDropdown } from './NotificationsDropdown';
@@ -17,7 +17,7 @@ export const Header: React.FC = () => {
         <button
           onClick={toggleSidebar}
           className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
-          title="Đóng / mở sidebar"
+          title="Đóng / mở thanh điều hướng"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Tìm kiếm nhân viên, ca làm, hóa đơn..."
+            placeholder="Tìm kiếm nhân viên, ca trực, hóa đơn..."
             className="w-full pl-9 pr-14 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 pointer-events-none">
@@ -39,13 +39,12 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Khối bên phải: Trạng thái Gateway, Tạo mới nhanh, Chuông thông báo, User Profile */}
+      {/* Khối bên phải: Trạng thái hệ thống, Tạo nhanh, Chuông thông báo, User Profile */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Gateway Connection Indicator */}
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs">
-          <Activity className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
-          <span className="font-medium">Gateway 5000:</span>
-          <span className="text-[11px] font-mono text-emerald-700">Online</span>
+        {/* System Online Status */}
+        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="font-medium text-[11px] text-emerald-800">Hệ thống sẵn sàng</span>
         </div>
 
         {/* Nút Tạo Nhanh (Quick Actions) */}
@@ -93,7 +92,7 @@ export const Header: React.FC = () => {
                 className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700"
               >
                 <ScanLine className="w-4 h-4 text-slate-400" />
-                Quét hóa đơn AI
+                Quét hóa đơn tự động
               </Link>
             </div>
           )}
@@ -102,7 +101,7 @@ export const Header: React.FC = () => {
         {/* Chuông Thông Báo */}
         <NotificationsDropdown />
 
-        {/* Đường phân cách nhỏ */}
+        {/* Đường phân cách */}
         <div className="h-6 w-[1px] bg-slate-200 mx-1 hidden sm:block" />
 
         {/* User Profile */}

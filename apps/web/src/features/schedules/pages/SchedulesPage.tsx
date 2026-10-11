@@ -33,12 +33,17 @@ export const SchedulesPage: React.FC = () => {
     });
   };
 
+  const getEmployeeName = (empId: string) => {
+    const found = employees?.find((e) => e.id === empId);
+    return found ? found.fullName : 'Nhân viên';
+  };
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900">Quản Lý Lịch Làm & Ca Kíp</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Quản Lý Lịch Làm & Ca Trực</h2>
         <p className="text-sm text-slate-500">
-          Dữ liệu thuộc sở hữu của <strong className="text-emerald-700">Schedule Service (Port 5002)</strong>
+          Xếp ca, phân công nhiệm vụ và theo dõi lịch trực của nhân viên nhà hàng
         </p>
       </div>
 
@@ -65,13 +70,10 @@ export const SchedulesPage: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-[11px] text-slate-400 mt-1">
-                Lưu ý: Schedule Service chỉ lưu `EmployeeId` (Loose Coupling).
-              </p>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Tên ca làm</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Ca làm việc</label>
               <select
                 value={shiftName}
                 onChange={(e) => setShiftName(e.target.value)}
@@ -89,7 +91,7 @@ export const SchedulesPage: React.FC = () => {
               isLoading={createShiftMutation.isPending}
               disabled={!selectedEmployeeId}
             >
-              Phân công ca
+              Lưu phân công
             </Button>
           </form>
         </Card>
@@ -105,7 +107,7 @@ export const SchedulesPage: React.FC = () => {
           ) : isError ? (
             <div className="p-6 text-center text-slate-500">
               <AlertCircle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-rose-600">Không thể kết nối đến Schedule Service</p>
+              <p className="text-sm font-medium text-rose-600">Không thể tải danh sách ca làm</p>
             </div>
           ) : !shifts || shifts.length === 0 ? (
             <div className="text-center py-10 text-slate-400">
@@ -116,9 +118,9 @@ export const SchedulesPage: React.FC = () => {
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-500 text-xs">
-                    <th className="pb-3 font-medium">Tên ca</th>
-                    <th className="pb-3 font-medium">Mã nhân viên (Ref ID)</th>
-                    <th className="pb-3 font-medium">Bắt đầu</th>
+                    <th className="pb-3 font-medium">Ca trực</th>
+                    <th className="pb-3 font-medium">Nhân viên phụ trách</th>
+                    <th className="pb-3 font-medium">Khung giờ</th>
                     <th className="pb-3 font-medium">Trạng thái</th>
                   </tr>
                 </thead>
@@ -126,9 +128,11 @@ export const SchedulesPage: React.FC = () => {
                   {shifts.map((s) => (
                     <tr key={s.id} className="hover:bg-slate-50/50">
                       <td className="py-3 font-medium text-slate-800">{s.shiftName}</td>
-                      <td className="py-3 font-mono text-xs text-slate-500">{s.employeeId.slice(0, 8)}...</td>
+                      <td className="py-3 text-slate-700 text-xs font-medium">
+                        {getEmployeeName(s.employeeId)}
+                      </td>
                       <td className="py-3 text-xs text-slate-600">
-                        {new Date(s.startTimeUtc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(s.startTimeUtc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(s.endTimeUtc).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="py-3">
                         <Badge variant={s.isCancelled ? 'danger' : 'success'}>
@@ -146,4 +150,3 @@ export const SchedulesPage: React.FC = () => {
     </div>
   );
 };
-
