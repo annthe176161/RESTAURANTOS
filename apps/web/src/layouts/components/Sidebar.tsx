@@ -8,8 +8,6 @@ import {
   LayoutDashboard, 
   UtensilsCrossed, 
   Store,
-  ChevronLeft,
-  ChevronRight,
   X
 } from 'lucide-react';
 import { useUiStore } from '../../stores/useThemeStore';
@@ -17,7 +15,6 @@ import { useUiStore } from '../../stores/useThemeStore';
 export const Sidebar: React.FC = () => {
   const { 
     isSidebarOpen, 
-    toggleSidebar, 
     isMobileSidebarOpen, 
     closeMobileSidebar 
   } = useUiStore();
@@ -109,19 +106,6 @@ export const Sidebar: React.FC = () => {
           isSidebarOpen ? 'w-64' : 'w-20'
         }`}
       >
-        {/* Nút Thu Gọn Nhanh Floating Toggle Button (Mép phải sidebar) */}
-        <button
-          onClick={toggleSidebar}
-          className="absolute -right-3 top-20 w-6 h-6 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white rounded-full border border-slate-700 shadow-md flex items-center justify-center transition-colors z-30 focus:outline-none"
-          title={isSidebarOpen ? 'Thu nhỏ thanh menu' : 'Mở rộng thanh menu'}
-        >
-          {isSidebarOpen ? (
-            <ChevronLeft className="w-3.5 h-3.5" />
-          ) : (
-            <ChevronRight className="w-3.5 h-3.5" />
-          )}
-        </button>
-
         {/* Logo & Brand Header */}
         <div className="h-16 flex items-center border-b border-slate-800/80 px-4 overflow-hidden">
           <div className="flex items-center gap-3 w-full">
