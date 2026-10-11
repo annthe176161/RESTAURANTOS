@@ -6,16 +6,24 @@ import { NotificationsDropdown } from './NotificationsDropdown';
 import { UserNav } from './UserNav';
 
 export const Header: React.FC = () => {
-  const { toggleSidebar } = useUiStore();
+  const { toggleSidebar, toggleMobileSidebar } = useUiStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [isQuickCreateOpen, setIsQuickCreateOpen] = useState(false);
+
+  const handleToggleMenu = () => {
+    if (window.innerWidth < 768) {
+      toggleMobileSidebar();
+    } else {
+      toggleSidebar();
+    }
+  };
 
   return (
     <header className="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">
       {/* Khối bên trái: Nút Toggle Menu & Ô Tìm Kiếm Nhanh */}
       <div className="flex items-center gap-4 flex-1 max-w-xl">
         <button
-          onClick={toggleSidebar}
+          onClick={handleToggleMenu}
           className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
           title="Đóng / mở thanh điều hướng"
         >

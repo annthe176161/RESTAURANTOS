@@ -57,3 +57,4 @@ export const RouteErrorBoundary: React.FC = () => {
     </div>
   );
 };
+
