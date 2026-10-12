@@ -48,7 +48,11 @@ public class EmployeeServiceIntegrationTests : IClassFixture<WebApplicationFacto
 
     public EmployeeServiceIntegrationTests(WebApplicationFactory<EmployeeMarker> factory)
     {
-        _factory = factory;
+        _factory = factory.WithWebHostBuilder(builder =>
+        {
+            builder.UseSetting("Environment", "Testing");
+            builder.UseSetting("RabbitMQ:Host", "in-memory");
+        });
     }
 
     [Fact]
@@ -67,7 +71,11 @@ public class ScheduleServiceIntegrationTests : IClassFixture<WebApplicationFacto
 
     public ScheduleServiceIntegrationTests(WebApplicationFactory<ScheduleMarker> factory)
     {
-        _factory = factory;
+        _factory = factory.WithWebHostBuilder(builder =>
+        {
+            builder.UseSetting("Environment", "Testing");
+            builder.UseSetting("RabbitMQ:Host", "in-memory");
+        });
     }
 
     [Fact]

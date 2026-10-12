@@ -19,23 +19,35 @@ builder.Services.AddDbContext<EmployeeDbContext>(options =>
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
-// 2.1 Cấu hình MassTransit kết nối RabbitMQ
+// 2.1 Cấu hình MassTransit kết nối RabbitMQ (hoặc In-Memory khi chạy Test / CI)
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingRabbitMq((context, cfg) =>
+    var rabbitHost = builder.Configuration["RabbitMQ:Host"];
+
+    if (builder.Environment.IsEnvironment("Testing") || string.Equals(rabbitHost, "in-memory", StringComparison.OrdinalIgnoreCase))
     {
-        var rabbitHost = builder.Configuration["RabbitMQ:Host"] ?? "localhost";
-        var rabbitUser = builder.Configuration["RabbitMQ:Username"] ?? "guest";
-        var rabbitPass = builder.Configuration["RabbitMQ:Password"] ?? "guest";
-
-        cfg.Host(rabbitHost, "/", h =>
+        x.UsingInMemory((context, cfg) =>
         {
-            h.Username(rabbitUser);
-            h.Password(rabbitPass);
+            cfg.ConfigureEndpoints(context);
         });
+    }
+    else
+    {
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            var host = string.IsNullOrWhiteSpace(rabbitHost) ? "localhost" : rabbitHost;
+            var rabbitUser = builder.Configuration["RabbitMQ:Username"] ?? "guest";
+            var rabbitPass = builder.Configuration["RabbitMQ:Password"] ?? "guest";
 
-        cfg.ConfigureEndpoints(context);
-    });
+            cfg.Host(host, "/", h =>
+            {
+                h.Username(rabbitUser);
+                h.Password(rabbitPass);
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
+    }
 });
 
 // 3. Đăng ký MVC Controllers (Chuẩn Controller-based API truyền thống)
@@ -91,7 +103,10 @@ if (app.Environment.IsDevelopment())
        .ExcludeFromDescription();
 }
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = check => !check.Name.Contains("masstransit", StringComparison.OrdinalIgnoreCase)
+});
 
 // 7. Định tuyến Controllers
 app.MapControllers();

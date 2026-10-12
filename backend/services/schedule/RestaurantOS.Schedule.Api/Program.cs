@@ -22,27 +22,39 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<EmployeeStatusToggledConsumer>();
     x.AddConsumer<EmployeeDeletedConsumer>();
 
-    x.UsingRabbitMq((context, cfg) =>
+    var rabbitHost = builder.Configuration["RabbitMQ:Host"];
+
+    if (builder.Environment.IsEnvironment("Testing") || string.Equals(rabbitHost, "in-memory", StringComparison.OrdinalIgnoreCase))
     {
-        var rabbitHost = builder.Configuration["RabbitMQ:Host"] ?? "localhost";
-        var rabbitUser = builder.Configuration["RabbitMQ:Username"] ?? "guest";
-        var rabbitPass = builder.Configuration["RabbitMQ:Password"] ?? "guest";
-
-        cfg.Host(rabbitHost, "/", h =>
+        x.UsingInMemory((context, cfg) =>
         {
-            h.Username(rabbitUser);
-            h.Password(rabbitPass);
+            cfg.ConfigureEndpoints(context);
         });
-
-        // Cấu hình Queue chuyên biệt nhận sự kiện nhân sự
-        cfg.ReceiveEndpoint("schedule-service-employee-events", e =>
+    }
+    else
+    {
+        x.UsingRabbitMq((context, cfg) =>
         {
-            e.ConfigureConsumer<EmployeeCreatedConsumer>(context);
-            e.ConfigureConsumer<EmployeeUpdatedConsumer>(context);
-            e.ConfigureConsumer<EmployeeStatusToggledConsumer>(context);
-            e.ConfigureConsumer<EmployeeDeletedConsumer>(context);
+            var host = string.IsNullOrWhiteSpace(rabbitHost) ? "localhost" : rabbitHost;
+            var rabbitUser = builder.Configuration["RabbitMQ:Username"] ?? "guest";
+            var rabbitPass = builder.Configuration["RabbitMQ:Password"] ?? "guest";
+
+            cfg.Host(host, "/", h =>
+            {
+                h.Username(rabbitUser);
+                h.Password(rabbitPass);
+            });
+
+            // Cấu hình Queue chuyên biệt nhận sự kiện nhân sự
+            cfg.ReceiveEndpoint("schedule-service-employee-events", e =>
+            {
+                e.ConfigureConsumer<EmployeeCreatedConsumer>(context);
+                e.ConfigureConsumer<EmployeeUpdatedConsumer>(context);
+                e.ConfigureConsumer<EmployeeStatusToggledConsumer>(context);
+                e.ConfigureConsumer<EmployeeDeletedConsumer>(context);
+            });
         });
-    });
+    }
 });
 
 builder.Services.AddCors(options =>
@@ -73,7 +85,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = check => !check.Name.Contains("masstransit", StringComparison.OrdinalIgnoreCase)
+});
 
 // API 1: Lấy danh sách nhân viên đồng bộ sẵn trong DB riêng của Schedule
 app.MapGet("/api/schedules/employees", async (IScheduleRepository repository, CancellationToken ct) =>
