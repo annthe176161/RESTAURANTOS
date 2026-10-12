@@ -6,7 +6,8 @@ WORKDIR /src
 COPY Directory.Build.props .
 COPY Directory.Packages.props .
 
-# Copy Employee project files and restore
+# Copy Shared Contracts & Employee project files and restore
+COPY backend/shared/RestaurantOS.Shared.Contracts/*.csproj backend/shared/RestaurantOS.Shared.Contracts/
 COPY backend/services/employee/RestaurantOS.Employee.Domain/*.csproj backend/services/employee/RestaurantOS.Employee.Domain/
 COPY backend/services/employee/RestaurantOS.Employee.Application/*.csproj backend/services/employee/RestaurantOS.Employee.Application/
 COPY backend/services/employee/RestaurantOS.Employee.Infrastructure/*.csproj backend/services/employee/RestaurantOS.Employee.Infrastructure/
@@ -15,6 +16,7 @@ COPY backend/services/employee/RestaurantOS.Employee.Api/*.csproj backend/servic
 RUN dotnet restore backend/services/employee/RestaurantOS.Employee.Api/RestaurantOS.Employee.Api.csproj
 
 # Copy source code and publish
+COPY backend/shared/ backend/shared/
 COPY backend/services/employee/ backend/services/employee/
 RUN dotnet publish backend/services/employee/RestaurantOS.Employee.Api/RestaurantOS.Employee.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
 

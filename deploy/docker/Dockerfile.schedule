@@ -6,7 +6,8 @@ WORKDIR /src
 COPY Directory.Build.props .
 COPY Directory.Packages.props .
 
-# Copy Schedule project files and restore
+# Copy Shared Contracts & Schedule project files and restore
+COPY backend/shared/RestaurantOS.Shared.Contracts/*.csproj backend/shared/RestaurantOS.Shared.Contracts/
 COPY backend/services/schedule/RestaurantOS.Schedule.Domain/*.csproj backend/services/schedule/RestaurantOS.Schedule.Domain/
 COPY backend/services/schedule/RestaurantOS.Schedule.Application/*.csproj backend/services/schedule/RestaurantOS.Schedule.Application/
 COPY backend/services/schedule/RestaurantOS.Schedule.Infrastructure/*.csproj backend/services/schedule/RestaurantOS.Schedule.Infrastructure/
@@ -15,6 +16,7 @@ COPY backend/services/schedule/RestaurantOS.Schedule.Api/*.csproj backend/servic
 RUN dotnet restore backend/services/schedule/RestaurantOS.Schedule.Api/RestaurantOS.Schedule.Api.csproj
 
 # Copy source code and publish
+COPY backend/shared/ backend/shared/
 COPY backend/services/schedule/ backend/services/schedule/
 RUN dotnet publish backend/services/schedule/RestaurantOS.Schedule.Api/RestaurantOS.Schedule.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
 

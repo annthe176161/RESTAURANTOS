@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\RestaurantOS.Schedule.Domain\RestaurantOS.Schedule.Domain.csproj" />
+    <ProjectReference Include="..\..\..\shared\RestaurantOS.Shared.Contracts\RestaurantOS.Shared.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MassTransit" />
   </ItemGroup>
 </Project>

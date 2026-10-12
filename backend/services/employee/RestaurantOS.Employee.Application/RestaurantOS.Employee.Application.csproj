@@ -2,6 +2,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RestaurantOS.Employee.Domain\RestaurantOS.Employee.Domain.csproj" />
+    <ProjectReference Include="..\..\..\shared\RestaurantOS.Shared.Contracts\RestaurantOS.Shared.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" />
   </ItemGroup>
 
 </Project>
